@@ -20,8 +20,13 @@ const Produs = sequelize.define("Produs", {
     dataExpirare: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+
+    idUtilizator: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 })
 
 
-module.export = Produs;
+module.exports = Produs;

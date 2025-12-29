@@ -8,7 +8,7 @@ const Prietenie = sequelize.define("Prietenie", {
         autoIncrement: true
     },
 
-    idRequest: {
+    idSender: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -29,4 +29,4 @@ const Prietenie = sequelize.define("Prietenie", {
 })
 
 
-module.export = Prietenie;
+module.exports = Prietenie;
