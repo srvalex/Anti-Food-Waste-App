@@ -1,3 +1,5 @@
+const User = require('../modules/User');
+const { operatiiBD } = require('sequelize');
 const serviciiUser = require("../services/user.service");
 
 

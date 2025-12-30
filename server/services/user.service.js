@@ -8,7 +8,7 @@ async function findUserByID(userID) {
 
 
 async function findAllUsers(filtre) {
-    const { username, email, sort, order } = filtre;
+    const { id, username, email, sort, order } = filtre;
     const optiuniQuery = {}
     const where = {}
     if (username)
