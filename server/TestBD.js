@@ -2,32 +2,13 @@ const express = require('express');
 const app = express();
 const sequelize = require('./db');
 const { User, Produs, Prietenie } = require('./modules');
+const { Op } = require("sequelize");
+const rutaUser = require("./routes/userRoutes");
 
 
 app.use(express.json());
 
-
-
-
-app.get("/users", async (req, res) => {
-    let rez = await User.findAll();
-    if (rez.length !== 0) {
-        rez.forEach(user => { console.log(user.toJSON()) })
-        return res.status(200).json(rez)
-    }
-})
-
-
-app.post("/user", async (req, res) => {
-    if (req.body && req.body.username && req.body.email) {
-        let user = await User.create(req.body);
-        return res.status(200).json(user)
-    }
-    else {
-        return res.status(400).json({ "mesaj": "Bad request" })
-    }
-})
-
+app.use("/", rutaUser);
 
 
 app.post("/produse", async (req, res) => {
