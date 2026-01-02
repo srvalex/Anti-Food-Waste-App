@@ -38,9 +38,39 @@ async function insertNewProduct(body) {
 }
 
 
+async function updateProduct(idProdus, body) {
+    let campuriProdus = [
+        "nume",
+        "categorie",
+        "dataExpirare"
+    ];
+    let campuriUpdate = {};
+    for (let camp of campuriProdus) {
+        if (body[camp] !== undefined)
+            campuriUpdate[camp] = body[camp];
+    }
+    const [tupluri] = await Produs.update(
+        campuriUpdate,
+        {
+            where: { idProdus }
+        }
+    );
+    return tupluri;
+}
+
+
+async function deleteProduct(idProdus) {
+    return await Produs.destroy({
+        where: { idProdus }
+    });
+}
+
+
 
 module.exports = {
     findAllProducts,
     findProductByPK,
-    insertNewProduct
+    insertNewProduct,
+    updateProduct,
+    deleteProduct
 }
