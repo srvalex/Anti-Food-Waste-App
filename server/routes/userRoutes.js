@@ -1,4 +1,4 @@
-const User = require('../modules/User');
+const { User } = require('../modules');
 const { operatiiBD } = require('sequelize');
 const serviciiUser = require("../services/user.service");
 
@@ -47,5 +47,18 @@ router.route("/users/:id")
         return res.status(200).json({ "Mesaj": "User-ul a fost sters cu succes" });
     })
 
+router.route("/user/produse")
+    .get(async (req, res) => {
+        let users = await serviciiUser.getMultipleUserPlusProdus();
+        return res.json(users);
+    })
+
+router.route("/user/:id/produse")
+    .get(async (req, res) => {
+        let users = await serviciiUser.getSingleUserPlusProdus(req.params.id);
+        if (!users)
+            res.status(404).json({ "Eroare": "Utilizatorul nu a fost gasit!" })
+        return res.json(users);
+    })
 
 module.exports = router;

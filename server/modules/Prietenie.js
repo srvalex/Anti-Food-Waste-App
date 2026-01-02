@@ -25,7 +25,14 @@ const Prietenie = sequelize.define("Prietenie", {
         validate: {
             isIn: [["In asteptare", "Acceptata", "Refuzata"]]
         }
+    },
+
+    tag: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
+}, {
+    tableName: "prieteni"
 })
 
 

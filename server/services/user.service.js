@@ -1,4 +1,4 @@
-const User = require("../modules/User");
+const { User, Produs, Prietenie } = require("../modules");
 const { Op } = require("sequelize");
 
 
@@ -58,7 +58,35 @@ async function deleteUser(id) {
     });
 }
 
+async function getMultipleUserPlusProdus() {
+    return await User.findAll({
+        attributes: ["id", "username"],
+        include: [
+            {
+                model: Produs,
+                attributes: ["nume", "categorie", "dataExpirare"],
+                required: true
+            }
+        ]
+    })
+}
 
-module.exports = { findUserByID, findAllUsers, AddNewUser, updateUser, deleteUser }
+async function getSingleUserPlusProdus(id) {
+    return await User.findAll({
+        attributes: ["id", "username"],
+        where: { id },
+        include: [{
+            model: Produs,
+            attributes: ["nume", "categorie", "dataExpirare"],
+            required: true
+        }]
+    })
+}
+
+
+
+
+
+module.exports = { findUserByID, findAllUsers, AddNewUser, updateUser, deleteUser, getMultipleUserPlusProdus, getSingleUserPlusProdus }
 
 

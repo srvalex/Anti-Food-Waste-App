@@ -26,6 +26,8 @@ const Produs = sequelize.define("Produs", {
         type: DataTypes.INTEGER,
         allowNull: false
     }
+}, {
+    tableName: "produse"
 })
 
 
