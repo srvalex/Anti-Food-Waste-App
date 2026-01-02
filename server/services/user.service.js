@@ -31,6 +31,34 @@ async function AddNewUser(body) {
     return user;
 }
 
-module.exports = { findUserByID, findAllUsers, AddNewUser }
+
+async function updateUser(id, body) {
+    let campuriUser = [
+        "username",
+        "email"
+    ];
+    let campuriUpdate = {};
+    for (let camp of campuriUser) {
+        if (body[camp] !== undefined)
+            campuriUpdate[camp] = body[camp];
+    }
+    const [tupluri] = await User.update(
+        campuriUpdate,
+        {
+            where: { id }
+        }
+    );
+    return tupluri;
+}
+
+
+async function deleteUser(id) {
+    return await User.destroy({
+        where: { id }
+    });
+}
+
+
+module.exports = { findUserByID, findAllUsers, AddNewUser, updateUser, deleteUser }
 
 

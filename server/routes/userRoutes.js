@@ -30,4 +30,22 @@ router.route("/users")
     })
 
 
+router.route("/users/:id")
+    .put(async (req, res) => {
+        let nrTupluri = await serviciiUser.updateUser(req.params.id, req.body);
+        console.log("NUMAR RANDURI ACTUALIZATE UPDATE: " + nrTupluri);
+        if (nrTupluri === 0)
+            return res.status(404).json({ "Eroare": "User inexistent" })
+        return res.status(200).json({ "Mesaj": "Actualizare cu succes!" });
+    })
+
+    .delete(async (req, res) => {
+        let nrTupluri = await serviciiUser.deleteUser(req.params.id);
+        console.log("NUMAR RANDURI ACTUALIZATE DELETE: " + nrTupluri);
+        if (nrTupluri === 0)
+            return res.status(404).json({ "Eroare": "User-ul nu a fost gasit" });
+        return res.status(200).json({ "Mesaj": "User-ul a fost sters cu succes" });
+    })
+
+
 module.exports = router;
