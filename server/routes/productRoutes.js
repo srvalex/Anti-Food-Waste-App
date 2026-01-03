@@ -46,4 +46,22 @@ router.route("/produse/:id")
         return res.status(200).json({ "Mesaj": "Produsul a fost sters cu succes" });
     })
 
+router.route('/produse/available')
+    .get(async (req, res) => {
+        let { categorie } = req.query;
+        let produse = await serviciiProdus.findAvailableProducts(categorie);
+        return res.status(200).json(produse);
+    });
+
+router.route('/produse/expira')
+    .get(async (req, res) => {
+        let { idUtilizator, days } = req.query;
+        if (!idUtilizator)
+            return res.status(400).json({ "Eroare": "idUtilizator este obligatoriu" });
+
+        let daysThreshold = days ? parseInt(days) : 3;
+        let produse = await serviciiProdus.findExpiringProducts(idUtilizator, daysThreshold);
+        return res.status(200).json(produse);
+    });
+
 module.exports = router 

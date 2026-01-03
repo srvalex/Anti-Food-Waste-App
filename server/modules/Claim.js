@@ -1,39 +1,38 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const Prietenie = sequelize.define("Prietenie", {
-    idPrietenie: {
+const Claim = sequelize.define("Claim", {
+    idClaim: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
 
-    idSender: {
+    idProdus: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
 
-
-    idReciever: {
+    idClaimer: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
 
-    statusCerere: {
+    statusClaim: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: "In asteptare",
         validate: {
-            isIn: [["In asteptare", "Acceptata", "Refuzata"]]
+            isIn: [["In asteptare", "Acceptat", "Refuzat"]]
         }
     },
 
-    tag: {
-        type: DataTypes.STRING,
+    mesaj: {
+        type: DataTypes.TEXT,
         allowNull: true
     }
 }, {
-    tableName: "prieteni"
-})
+    tableName: "claims"
+});
 
-
-module.exports = Prietenie;
+module.exports = Claim;

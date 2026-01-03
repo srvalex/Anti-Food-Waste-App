@@ -42,7 +42,9 @@ async function updateProduct(idProdus, body) {
     let campuriProdus = [
         "nume",
         "categorie",
-        "dataExpirare"
+        "dataExpirare",
+        "isAvailable",
+        "status"
     ];
     let campuriUpdate = {};
     for (let camp of campuriProdus) {
@@ -65,12 +67,50 @@ async function deleteProduct(idProdus) {
     });
 }
 
+async function findAvailableProducts(categorie) {
+    const { User } = require('../modules');
+    let whereClause = {
+        isAvailable: true,
+        status: 'available'
+    };
 
+    if (categorie) whereClause.categorie = categorie;
+
+    return await Produs.findAll({
+        where: whereClause,
+        include: [
+            { model: User, attributes: ['id', 'username', 'email'] }
+        ],
+        order: [['dataExpirare', 'ASC']]
+    });
+}
+
+async function findExpiringProducts(idUtilizator, days) {
+    const { Op } = require('sequelize');
+    const today = new Date();
+    const futureDate = new Date();
+    futureDate.setDate(today.getDate() + days);
+
+    return await Produs.findAll({
+        where: {
+            idUtilizator: idUtilizator,
+            dataExpirare: {
+                [Op.between]: [today, futureDate]
+            },
+            status: {
+                [Op.ne]: 'expired'
+            }
+        },
+        order: [['dataExpirare', 'ASC']]
+    });
+}
 
 module.exports = {
     findAllProducts,
     findProductByPK,
     insertNewProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    findAvailableProducts,
+    findExpiringProducts
 }

@@ -1,6 +1,7 @@
 const User = require("./User");
 const Produs = require("./Produs");
 const Prietenie = require("./Prietenie");
+const Claim = require("./Claim");
 
 
 User.hasMany(Produs,
@@ -39,8 +40,31 @@ Prietenie.belongsTo(User, {
     as: "primire"
 });
 
+User.hasMany(Claim, {
+    foreignKey: "idClaimer",
+    as: "claims",
+    onDelete: "CASCADE"
+});
+
+Claim.belongsTo(User, {
+    foreignKey: "idClaimer",
+    as: "claimer"
+});
+
+Produs.hasMany(Claim, {
+    foreignKey: "idProdus",
+    as: "claims",
+    onDelete: "CASCADE"
+});
+
+Claim.belongsTo(Produs, {
+    foreignKey: "idProdus",
+    as: "produs"
+});
+
 module.exports = {
     User,
     Produs,
-    Prietenie
+    Prietenie,
+    Claim
 };

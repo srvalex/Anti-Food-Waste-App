@@ -25,9 +25,38 @@ const Produs = sequelize.define("Produs", {
     idUtilizator: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+
+    isAvailable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
+
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "in frigider",
+        validate: {
+            isIn: [["in frigider", "disponibil", "claimed", "expirat"]]
+        }
     }
 }, {
-    tableName: "produse"
+    tableName: "produse",
+    hooks: {
+        afterCreate: async (produs, options) => {
+            const Claim = require('./Claim');
+
+            await Claim.create({
+                idProdus: produs.idProdus,
+                idClaimer: null,
+                statusClaim: "In asteptare",
+                mesaj: `Produs nou creat: ${produs.nume}`
+            });
+
+            console.log(`✓ Claim created automatically for product ${produs.idProdus} (${produs.nume})`);
+        }
+    }
 })
 
 
