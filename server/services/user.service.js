@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 
 async function findUserByID(userID) {
-    return User.findByPk(userID)
+    return await User.findByPk(userID)
 }
 
 
@@ -77,8 +77,7 @@ async function getSingleUserPlusProdus(id) {
         where: { id },
         include: [{
             model: Produs,
-            attributes: ["nume", "categorie", "dataExpirare"],
-            required: true
+            required: false
         }]
     })
 }

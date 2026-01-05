@@ -21,7 +21,7 @@ router.route("/users")
     })
     .post(async (req, res) => {
         if (req.body && req.body.username && req.body.email) {
-            let user = serviciiUser.AddNewUser(req.body)
+            let user = await serviciiUser.AddNewUser(req.body)
             return res.status(200).json(user)
         }
         else {
@@ -29,7 +29,7 @@ router.route("/users")
         }
     })
 
-
+//req.body => format JSON, req.query => .../users?id=1&email=gigi@becali.ro..., req.params.id
 router.route("/users/:id")
     .put(async (req, res) => {
         let nrTupluri = await serviciiUser.updateUser(req.params.id, req.body);
@@ -46,6 +46,7 @@ router.route("/users/:id")
             return res.status(404).json({ "Eroare": "User-ul nu a fost gasit" });
         return res.status(200).json({ "Mesaj": "User-ul a fost sters cu succes" });
     })
+
 
 router.route("/user/produse")
     .get(async (req, res) => {
