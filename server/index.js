@@ -1,17 +1,21 @@
 const express = require('express');
 const app = express();
 const sequelize = require('./db');
-const { User, Produs, Prietenie } = require('./modules');
+const { User, Produs, Prietenie, Claim } = require('./modules');
 const { Op } = require("sequelize");
 const rutaUser = require("./routes/userRoutes");
 const rutaProdus = require("./routes/productRoutes");
 const rutaPrietenie = require("./routes/friendshipRoutes");
+const rutaClaim = require("./routes/claimRoutes");
+const cors = require("cors");
 
-
+app.use(cors());
 app.use(express.json());
 app.use("/", rutaUser);
 app.use("/", rutaProdus);
 app.use("/", rutaPrietenie);
+app.use("/", rutaClaim);
+
 
 sequelize.sync({ alter: true }).then(() => {
     app.listen(8000, () => {

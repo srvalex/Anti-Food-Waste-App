@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './CommunityPage.css';
+import ShareButtons from './ShareButtons';
 
 function CommunityPage({ userId }) {
     const [products, setProducts] = useState([]);
@@ -264,6 +265,11 @@ function CommunityPage({ userId }) {
                                     >
                                         🎁 Revendică Produs
                                     </button>
+
+                                    <ShareButtons
+                                        product={product}
+                                        ownerName={product.User ? product.User.username : `User #${product.idUtilizator}`}
+                                    />
                                 </div>
                             );
                         })}

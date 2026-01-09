@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './ProductList.css';
 import AddProductForm from './AddProductForm';
+import ShareButtons from './ShareButtons';
 
 function ProductList({ userId }) {
     const [products, setProducts] = useState([]);
@@ -222,12 +223,18 @@ function ProductList({ userId }) {
                                     🎁 Revendicat
                                 </div>
                             ) : (
-                                <button
-                                    onClick={() => toggleAvailability(product.idProdus, product.status)}
-                                    className={`availability-toggle-btn ${product.status === 'disponibil' ? 'available' : 'not-available'}`}
-                                >
-                                    {product.status === 'disponibil' ? '✓ Disponibil în Comunitate' : '📢 Marchează ca Disponibil'}
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => toggleAvailability(product.idProdus, product.status)}
+                                        className={`availability-toggle-btn ${product.status === 'disponibil' ? 'available' : 'not-available'}`}
+                                    >
+                                        {product.status === 'disponibil' ? '✓ Disponibil în Comunitate' : '📢 Marchează ca Disponibil'}
+                                    </button>
+
+                                    {product.status === 'disponibil' && (
+                                        <ShareButtons product={product} />
+                                    )}
+                                </>
                             )}
                         </div>
                     );
