@@ -2,9 +2,9 @@
 
 .product-list-container {
     font-family: 'Inter', sans-serif;
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 /* Header */
@@ -39,7 +39,7 @@
 /* Products Grid */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     animation: fadeIn 0.5s ease-out;
 }

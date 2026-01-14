@@ -11,6 +11,9 @@ function FriendsPage({ userId }) {
     const [error, setError] = useState(null);
     const [showAddFriend, setShowAddFriend] = useState(false);
     const [selectedUser, setSelectedUser] = useState('');
+    const [newFriendTag, setNewFriendTag] = useState(''); // Tag for new friend request
+    const [editingFriendId, setEditingFriendId] = useState(null); // ID of friend being edited
+    const [editTagValue, setEditTagValue] = useState(''); // Current tag value being edited
 
     useEffect(() => {
         fetchFriends();
@@ -84,20 +87,28 @@ function FriendsPage({ userId }) {
         }
 
         try {
+            const requestBody = {
+                idSender: userId,
+                idReciever: parseInt(selectedUser),
+                statusCerere: 'In asteptare'
+            };
+
+            // Add tag if provided
+            if (newFriendTag.trim()) {
+                requestBody.tag = newFriendTag.trim();
+            }
+
             const response = await fetch('http://localhost:8000/prietenii', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    idSender: userId,
-                    idReciever: parseInt(selectedUser),
-                    statusCerere: 'In asteptare'
-                })
+                body: JSON.stringify(requestBody)
             });
 
             if (response.ok) {
                 alert('Cerere de prietenie trimisă!');
                 setShowAddFriend(false);
                 setSelectedUser('');
+                setNewFriendTag('');
                 fetchFriends();
             } else {
                 const errorData = await response.json();
@@ -157,6 +168,37 @@ function FriendsPage({ userId }) {
         }
     };
 
+    const startEditingTag = (friendshipId, currentTag) => {
+        setEditingFriendId(friendshipId);
+        setEditTagValue(currentTag || '');
+    };
+
+    const cancelEditingTag = () => {
+        setEditingFriendId(null);
+        setEditTagValue('');
+    };
+
+    const updateFriendTag = async (friendshipId) => {
+        try {
+            const response = await fetch(`http://localhost:8000/prietenii/${friendshipId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tag: editTagValue.trim() || null })
+            });
+
+            if (response.ok) {
+                alert('Tag actualizat!');
+                setEditingFriendId(null);
+                setEditTagValue('');
+                fetchFriends();
+            } else {
+                alert('Eroare la actualizarea tag-ului');
+            }
+        } catch (err) {
+            alert(`Eroare: ${err.message}`);
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="friends-page-container">
@@ -209,6 +251,14 @@ function FriendsPage({ userId }) {
                             </option>
                         ))}
                     </select>
+                    <input
+                        type="text"
+                        value={newFriendTag}
+                        onChange={(e) => setNewFriendTag(e.target.value)}
+                        placeholder="Tag (opțional, ex: Familie, Coleg)"
+                        className="tag-input"
+                        maxLength="50"
+                    />
                     <button onClick={sendFriendRequest} className="send-request-btn">
                         📨 Trimite Cerere
                     </button>
@@ -285,7 +335,44 @@ function FriendsPage({ userId }) {
                                     <div className="friend-avatar">👤</div>
                                     <div className="friend-details">
                                         <h4>{userMap[friend.idSender === userId ? friend.idReciever : friend.idSender]?.username || `User #${friend.idSender === userId ? friend.idReciever : friend.idSender}`}</h4>
-                                        {friend.tag && <span className="friend-tag">{friend.tag}</span>}
+                                        {editingFriendId === friend.idPrietenie ? (
+                                            <div className="tag-edit-container">
+                                                <input
+                                                    type="text"
+                                                    value={editTagValue}
+                                                    onChange={(e) => setEditTagValue(e.target.value)}
+                                                    placeholder="Adaugă tag..."
+                                                    className="tag-input"
+                                                    maxLength="50"
+                                                    autoFocus
+                                                />
+                                                <div className="tag-edit-actions">
+                                                    <button
+                                                        onClick={() => updateFriendTag(friend.idPrietenie)}
+                                                        className="save-tag-btn"
+                                                    >
+                                                        ✓ Salvează
+                                                    </button>
+                                                    <button
+                                                        onClick={cancelEditingTag}
+                                                        className="cancel-tag-btn"
+                                                    >
+                                                        ✕ Anulează
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="tag-display">
+                                                {friend.tag && <span className="friend-tag">{friend.tag}</span>}
+                                                <button
+                                                    onClick={() => startEditingTag(friend.idPrietenie, friend.tag)}
+                                                    className="edit-tag-btn"
+                                                    title="Editează tag"
+                                                >
+                                                    ✏️
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <button

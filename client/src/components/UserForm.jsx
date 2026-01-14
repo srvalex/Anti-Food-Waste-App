@@ -95,9 +95,9 @@ function UserForm({ onUserSelect }) {
 
     return (
         <div className="user-form-container">
-            <h2>👤 User Login</h2>
+            <h2>Conectare sau Inregistrare</h2>
             <p className="form-description">
-                Select an existing user or create a new one
+                Selecteaza un user existent sau creeaza unul nou
             </p>
 
             {message && (
